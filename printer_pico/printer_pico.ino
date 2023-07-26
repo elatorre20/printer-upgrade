@@ -88,6 +88,9 @@ void setup() {
     Serial.println(" *C");
     delay(1000); //for debugging temperature sensor only
 
+    //set case fan
+    set_fan();
+
   }
 }
 

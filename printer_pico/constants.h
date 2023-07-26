@@ -33,6 +33,8 @@
 //temp/humidity constants
 #define TEMP_PIN 19
 #define TEMP_TYPE DHT11
+#define COOLING_TEMP 20 //temperature to turn on case fan
+#define FAN_PIN 22
 
 //serial constants
 #define RX 1

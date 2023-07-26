@@ -50,3 +50,12 @@ void set_rgb(uint16_t* rgb, uint8_t lights_on){ //update LED color
       digitalWrite(B_PIN, LOW);
     }
 }
+
+void set_fan(){
+  if(analogReadTemp() > COOLING_TEMP){
+    digitalWrite(FAN_PIN, HIGH);
+  }
+  else{
+    digitalWrite(FAN_PIN, LOW);
+  }
+}
