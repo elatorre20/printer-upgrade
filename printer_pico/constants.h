@@ -1,6 +1,17 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+//scheduling periods in MS
+#define SCHED_0 10 
+#define SCHED_1 100 
+#define SCHED_2 500
+#define SCHED_3 1000
+
+//timer constants
+// #define TIMER_INTERRUPT_DEBUG         1
+// #define _TIMERINTERRUPT_LOGLEVEL_     4
+#define TIMER0_INTERVAL_US    1000 //timer interval in microseconds, 1000=1ms
+
 //LED strip constants
 #define R_PIN 17 //led strip pins
 #define G_PIN 16
@@ -11,12 +22,12 @@
 //front panel constants
 #define BTN_PIN 20 //power button
 #define LED0_PIN 21 //power button LED
-#define LED1_PIN 2 //disk red LED
-#define LED2_PIN 3 //disk green LED
+#define RED_PIN 14 //disk red LED
+#define GREEN_PIN 15 //disk green LED
 #define POT_PIN A2 //potentiometer pin
 
 //neopixel constants
-#define NEO_0 10 //neopixel pins
+#define NEO_0 2 //neopixel pins
 #define NEO_1 11
 #define NEO_2 12
 #define NEO_3 13
@@ -33,7 +44,7 @@
 //temp/humidity constants
 #define TEMP_PIN 19
 #define TEMP_TYPE DHT11
-#define COOLING_TEMP 20 //temperature to turn on case fan
+#define COOLING_TEMP 12 //temperature to turn on case fan
 #define FAN_PIN 22
 
 //serial constants
