@@ -19,17 +19,18 @@ Adafruit_NeoPixel neo_0(LED_COUNT, NEO_0, NEO_WRGB + NEO_KHZ400);
 //temp humidity sensor
 DHT temp_sensor(TEMP_PIN, TEMP_TYPE);
 
-//scheduling timer
+//scheduling
 RPI_PICO_Timer ITimer0(1);
+volatile uint16_t timer_ms = 0; //used for scheduling
+volatile uint8_t on_button, timer_period; //interrupt flags
+uint8_t sched_flags[4]; //flags for the scheduling periods
 
 //general variables
 float amb[2]; //for temperature and humidity
 uint16_t rgb[3]; //for rgb duty cycles
-volatile uint8_t on_button, timer_period; //interrupt flags
 uint8_t lights_on; //whether RGB lights should be on
-uint32_t debounce;
-volatile uint16_t timer_ms = 0; //used for scheduling
-uint8_t sched_flags[4]; //flags for the scheduling periods
+uint8_t printing; //for controlling front panel LEDS
+
 
 void setup() {
   //begin serial console
@@ -56,7 +57,7 @@ void setup() {
   analogReadResolution(10);
 
   //button interrupt handler
-  attachInterrupt(digitalPinToInterrupt(BTN_PIN), button_handler, FALLING);
+  attachInterrupt(digitalPinToInterrupt(BTN_PIN), button_handler, RISING);
 
   //setup neopixels
   neo_0.begin();
@@ -96,6 +97,9 @@ void setup() {
       if(on_button){
         on_button = 0;
         lights_on = lights_on ^ 1;
+        if(DEBUG_500){
+          Serial.println("button pressed");
+        }
       }
       //set case fan
       set_fan(DEBUG_500);
@@ -106,7 +110,9 @@ void setup() {
         Serial.println("1000ms");
       }
       //read temp and humidity
-      poll_temp(amb, temp_sensor, DEBUG_1000); //have to work out some scheduling for this
+      poll_temp(amb, temp_sensor, DEBUG_1000);
+      //set case LED
+      set_led(printing, DEBUG_1000);
     }
   }
 }

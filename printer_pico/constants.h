@@ -46,6 +46,7 @@
 #define TEMP_TYPE DHT11
 #define COOLING_TEMP 12 //temperature to turn on case fan
 #define FAN_PIN 22
+#define TEMP_VREF 3.2f //correction factor for package temperature
 
 //serial constants
 #define RX 1

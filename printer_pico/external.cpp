@@ -50,12 +50,12 @@ void poll_temp(float* temp, DHT temp_sensor, uint8_t deb_print = 0){//reads from
 //RGB strip colors
 uint8_t LED_colors[16][3] = {
   {255,255,255}, //white
-  {255,40,40}, //red
-  {40,255,40}, //green
-  {40,40,255}, //blue
-  {255,255,40}, //yellow
-  {40,255,255}, //cyan
-  {255,40,255}, //magenta
+  {255,0,0}, //red
+  {0,255,0}, //green
+  {0,0,255}, //blue
+  {255,255,0}, //yellow
+  {0,255,255}, //cyan
+  {255,0,255}, //magenta
   {40,40,40}, //off
   {0,0,0}, //unused for now
   {0,0,0},
@@ -101,7 +101,7 @@ void set_rgb(uint16_t* rgb, uint8_t lights_on, uint8_t deb_print = 0){ //update 
 
 void set_fan(uint8_t deb_print = 0){
   uint8_t state = 0;
-  float t = analogReadTemp();
+  float t = analogReadTemp(TEMP_VREF);
   if(t > COOLING_TEMP){
     digitalWrite(FAN_PIN, HIGH);
     state = 1;
@@ -114,5 +114,22 @@ void set_fan(uint8_t deb_print = 0){
     Serial.print(t);
     Serial.print(" Fan: ");
     Serial.println(state);
+  }
+}
+
+void set_led(uint8_t printing, uint8_t deb_print){
+  if(printing){ //set LED red if printing, green otherwise;
+    digitalWrite(RED_PIN, LOW);
+    digitalWrite(GREEN_PIN, HIGH);
+    if(deb_print){
+      Serial.println("Red-printing");
+    }
+  }
+  else{
+    digitalWrite(RED_PIN, HIGH);
+    digitalWrite(GREEN_PIN, LOW);
+    if(deb_print){
+      Serial.println("Green-not printing");
+    }
   }
 }
