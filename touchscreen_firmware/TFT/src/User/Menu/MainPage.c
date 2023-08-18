@@ -12,7 +12,7 @@ void menuMain(void)
       {ICON_HEAT_FAN,                LABEL_UNIFIEDHEAT},
       {ICON_HOME_MOVE,               LABEL_UNIFIEDMOVE},
       #ifdef LOAD_UNLOAD_M701_M702
-        {ICON_EXTRUDE,                 LABEL_LOAD_UNLOAD_SHORT},
+        {ICON_EXTRUDE,                 LABEL_EXTRUDE},
       #else
         {ICON_EXTRUDE,                 LABEL_EXTRUDE},
       #endif
