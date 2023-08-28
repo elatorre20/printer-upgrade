@@ -172,7 +172,7 @@
  *     POPUP: Display a popup window for user confirmation.
  *     TOAST: A non-blocking Toast notification is displayed for few seconds. No user interaction is needed.
  */
-#define ACK_NOTIFICATION 1  // Default: 1
+#define ACK_NOTIFICATION 2  // Default: 1
 
 /**
  * Files Sorting
@@ -293,7 +293,7 @@
  *
  *   Options: [Layer height: 0, Layer number: 1, Both - height & number: 2]
  */
-#define LAYER_DISP_TYPE 0  // Default: 0
+#define LAYER_DISP_TYPE 1  // Default: 0
 
 //================================================================================
 //============================= Marlin Mode Settings =============================
@@ -402,7 +402,7 @@
  *
  *   Value range: [min: 0, max: 6]
  */
-#define EXTRUDER_COUNT  1  // Default: 1
+#define EXTRUDER_COUNT  2  // Default: 1
 
 // For mixing extruder set to 1 (this option turns off auto detection of the number of extruders)
 #define MIXING_EXTRUDER 0  // Default: 0
@@ -438,7 +438,7 @@
  *   Unit: [temperature in °C]
  *   Value range: [min: 20, max: 1000]
  */
-#define MIN_TEMP 180  // Default: 180
+#define MIN_TEMP 160  // Default: 180
 
 /**
  * Fan Maximum PWM Speed
@@ -463,9 +463,9 @@
 #define X_MIN_POS   0  // Default: 0
 #define Y_MIN_POS   0  // Default: 0
 #define Z_MIN_POS   0  // Default: 0
-#define X_MAX_POS 235  // Default: 235
-#define Y_MAX_POS 235  // Default: 235
-#define Z_MAX_POS 250  // Default: 250
+#define X_MAX_POS 300  // Default: 235
+#define Y_MAX_POS 300  // Default: 235
+#define Z_MAX_POS 400  // Default: 250
 
 /**
  * X & Y Move Speeds/Feedrates
@@ -902,7 +902,7 @@
  *
  *   Options: [disable: 0, enable: 1]
  */
-#define LCD_LOCK_ON_IDLE 0  // Default: 0
+#define LCD_LOCK_ON_IDLE 1  // Default: 0
 
 /**
  * LED Color
@@ -989,8 +989,8 @@
 #define CUSTOM_GCODE_5 "M501\n"
 #define CUSTOM_LABEL_6 "EEPROM Defaults"
 #define CUSTOM_GCODE_6 "M502\n"
-//#define CUSTOM_LABEL_7 "Custom7"
-//#define CUSTOM_GCODE_7 "M105\n"
+#define CUSTOM_LABEL_7 "Leveling x0, y0 point"
+#define CUSTOM_GCODE_7 "G91\nG0 Z10\nG90\nG0 X0 y0\nG0 Z7\n"
 //#define CUSTOM_LABEL_8 "Custom8"
 //#define CUSTOM_GCODE_8 "M105\n"
 //#define CUSTOM_LABEL_9 "Custom9"

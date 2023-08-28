@@ -196,6 +196,10 @@ void menuSettings(void)
         OPEN_MENU(menuConnectionSettings);
         break;
 
+      case KEY_ICON_5:
+        OPEN_MENU(menuTerminal);
+        break;
+
       case KEY_ICON_7:
         CLOSE_MENU();
         break;
