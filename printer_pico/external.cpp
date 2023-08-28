@@ -99,21 +99,25 @@ void set_rgb(uint16_t* rgb, uint8_t lights_on, uint8_t deb_print = 0){ //update 
   }
 }
 
-void set_fan(uint8_t deb_print = 0){
-  uint8_t state = 0;
+void set_fan(uint8_t* state, uint8_t deb_print = 0){
   float t = analogReadTemp(TEMP_VREF);
-  if(t > COOLING_TEMP){
-    digitalWrite(FAN_PIN, HIGH);
-    state = 1;
+  if((t > COOLING_TEMP)){
+    if(state[0]<2){
+      state[0]++;
+    }
+    else{
+      digitalWrite(FAN_PIN, HIGH);
+    }
   }
   else{
+    state[0] = 0;
     digitalWrite(FAN_PIN, LOW);
   }
   if(deb_print){
     Serial.print("board temp: ");
     Serial.print(t);
     Serial.print(" Fan: ");
-    Serial.println(state);
+    Serial.println(state[0]);
   }
 }
 

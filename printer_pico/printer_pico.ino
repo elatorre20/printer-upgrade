@@ -1,5 +1,6 @@
 #include <Adafruit_NeoPixel.h>
 #include <DHT.h>
+#include <Wire.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <RPi_Pico_TimerInterrupt.h>
@@ -7,10 +8,10 @@
 #include "constants.h"
 
 //debug logging settings, set to 1 to log on USB serial
-#define DEBUG_SCHED 1 //set for scheduling algorithm debugging, really clogs the serial 
-#define DEBUG_100 1 //set for debugging of functions in each of the scheduling classes
-#define DEBUG_500 1
-#define DEBUG_1000 1 
+#define DEBUG_SCHED 0 //set for scheduling algorithm debugging, really clogs the serial 
+#define DEBUG_100 0 //set for debugging of functions in each of the scheduling classes
+#define DEBUG_500 0
+#define DEBUG_1000 0 
 
 
 //neopixels
@@ -25,21 +26,28 @@ volatile uint16_t timer_ms = 0; //used for scheduling
 volatile uint8_t on_button, timer_period; //interrupt flags
 uint8_t sched_flags[4]; //flags for the scheduling periods
 
+//I2C communcation variables
+char I2CString[23] = "\nAmbient temperature: ";
+char I2CRecv[32];
+
 //general variables
 float amb[2]; //for temperature and humidity
 uint16_t rgb[3]; //for rgb duty cycles
 uint8_t lights_on; //whether RGB lights should be on
 uint8_t printing; //for controlling front panel LEDS
+uint8_t fan_state[1]; //for debouncing fan readings
 
 
 void setup() {
   //begin serial console
   Serial.begin();
 
-  //setup UART to communicate with screen/mobo
-  Serial1.setRX(RX);
-  Serial1.setTX(TX);
-  Serial1.begin(BAUD);
+  //setup I2C target to communicate with screen/mobo
+  Wire.setSDA(SDA);
+  Wire.setSCL(SCL);
+  Wire.begin(ADDR);
+  Wire.onReceive(I2C_RXHandler);
+  Wire.onRequest(I2C_TXHandler);
 
   //setup outputs
   pinMode(R_PIN, OUTPUT);
@@ -48,6 +56,8 @@ void setup() {
   pinMode(LED0_PIN, OUTPUT);
   pinMode(RED_PIN, OUTPUT);
   pinMode(GREEN_PIN, OUTPUT);
+  pinMode(FAN_PIN, OUTPUT);
+  pinMode(25, OUTPUT);
   //setup inputs
   pinMode(POT_PIN, INPUT);
   pinMode(BTN_PIN, INPUT_PULLUP);
@@ -87,6 +97,11 @@ void setup() {
       }
       //update RGB color
       set_rgb(rgb, lights_on, DEBUG_100);
+      //handle I2C messages
+      if(I2CRecv[0] != 0){
+        Serial.println(I2CRecv);
+        memset(I2CRecv,0,sizeof(I2CRecv));
+      }
     }
     if(sched_flags[2]){//500ms scheduling
       sched_flags[2] = 0;
@@ -101,8 +116,6 @@ void setup() {
           Serial.println("button pressed");
         }
       }
-      //set case fan
-      set_fan(DEBUG_500);
     }
     if(sched_flags[3]){//1000ms scheduling
       sched_flags[3] = 0;
@@ -113,6 +126,8 @@ void setup() {
       poll_temp(amb, temp_sensor, DEBUG_1000);
       //set case LED
       set_led(printing, DEBUG_1000);
+      //set case fan
+      set_fan(fan_state, DEBUG_1000);
     }
   }
 }
@@ -138,17 +153,16 @@ bool TimerHandler0(struct repeating_timer *t){ //timer interrupt handler
   return true;
 }
 
-// void serialEvent1() {//triggered when characters are available on serial 
-//   while (Serial.available()) {
-//     // get the new byte:
-//     char inChar = (char)Serial.read();
-//     // add it to the inputString:
-//     inputString += inChar;
-//     // if the incoming character is a newline, set a flag so the main loop can
-//     // do something about it:
-//     if (inChar == '\n') {
-//       stringComplete = true;
-//     }
-//   }
-// }
+void I2C_RXHandler(int numRecv){
+  uint8_t count = 0;
+  while(Wire.available()){
+    I2CRecv[count] = Wire.read();
+    count++;
+  }
+}
 
+void I2C_TXHandler(void){
+  Wire.write(I2CString, 23);
+  int temp = (int)amb[0];
+  Wire.write((char)temp);
+}

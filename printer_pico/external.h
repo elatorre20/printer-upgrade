@@ -13,7 +13,7 @@ void poll_temp(float* temp, DHT temp_sensor, uint8_t deb_print = 0);
 
 void set_rgb(uint16_t* rgb, uint8_t lights_on, uint8_t deb_print = 0);
 
-void set_fan(uint8_t deb_print = 0);
+void set_fan(uint8_t* state, uint8_t deb_print = 0);
 
 void set_led(uint8_t printing, uint8_t deb_print);
 

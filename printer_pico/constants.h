@@ -44,13 +44,14 @@
 //temp/humidity constants
 #define TEMP_PIN 19
 #define TEMP_TYPE DHT11
-#define COOLING_TEMP 12 //temperature to turn on case fan
+#define COOLING_TEMP 25 //temperature to turn on case fan
 #define FAN_PIN 22
 #define TEMP_VREF 3.2f //correction factor for package temperature
 
-//serial constants
-#define RX 1
-#define TX 0
-#define BAUD 9600
+//I2C constants
+#define SCL 1
+#define SDA 0
+#define ADDR 0x63 //target address
+
 
 #endif
