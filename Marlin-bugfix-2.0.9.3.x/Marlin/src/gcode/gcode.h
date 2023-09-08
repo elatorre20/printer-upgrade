@@ -303,6 +303,11 @@
  * M3426 - Read MCP3426 ADC over I2C. (Requires HAS_MCP3426_ADC)
  * M7219 - Control Max7219 Matrix LEDs. (Requires MAX7219_GCODE)
  *
+ ***Custom M codes***
+ * M5000 test custom commands
+ * M5001 leveling points
+ * M5002 Communcate with case board
+ * 
  *** SCARA ***
  * M360 - SCARA calibration: Move to cal-position ThetaA (0 deg calibration)
  * M361 - SCARA calibration: Move to cal-position ThetaB (90 deg calibration - steps per degree)
@@ -1228,6 +1233,10 @@ private:
   #if ENABLED(HAS_MCP3426_ADC)
     static void M3426();
   #endif
+
+  static void M5000();
+  static void M5001();
+  static void M5002();
 
   #if ENABLED(MAX7219_GCODE)
     static void M7219();

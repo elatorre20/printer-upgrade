@@ -1,90 +1,52 @@
 #include "../../inc/MarlinConfig.h"
 
+#include "../gcode.h"
+#include "../queue.h"
+#include "../parser.h"
+
 
 /**
- * M5001: Activate front panel LED by Gcode
+ * M5001: Go to leveling points
+ * 
+ * M5001 P0 home and move off board for probe attachment
+ * M5001 P<1-5> probe points 1-5
  */
-
+char *cmd0 = (char*)"G28\nG90\nG0 Z20\n";
+char *cmd1 = (char*)"G91\nG0 Z10\nG90\nG0 X60 Y60\nG0 Z7.1\n";
+char *cmd2 = (char*)"G91\nG0 Z10\nG90\nG0 X260 Y60\nG0 Z7.1\n";
+char *cmd3 = (char*)"G91\nG0 Z10\nG90\nG0 X260 Y260\nG0 Z7.1\n";
+char *cmd4 = (char*)"G91\nG0 Z10\nG90\nG0 X60 Y260\nG0 Z7.1\n";
+char *cmd5 = (char*)"G91\nG0 Z10\nG90\nG0 X160 Y160\nG0 Z7.1\n";
 
 void GcodeSuite::M5001() {
-  SERIAL_ECHOPGM(MSG_OK);
-  SERIAL_ECHOLNPGM("M5001 called successfully!");
+
+  switch(parser.intval('P')){
+    case 0 :
+      process_subcommands_now(cmd0);
+      SERIAL_ECHOLNPGM("Ready for probe attachment/removal");
+      break;
+    case 1 :
+      process_subcommands_now(cmd1);
+      SERIAL_ECHOLNPGM("Probing point -x, -y");
+      break;
+    case 2 :
+      process_subcommands_now(cmd2);
+      SERIAL_ECHOLNPGM("Probing point +x, -y");
+      break;
+    case 3 :
+      process_subcommands_now(cmd3);
+      SERIAL_ECHOLNPGM("Probing point +x, +y");
+      break;
+    case 4 :
+      process_subcommands_now(cmd4);
+      SERIAL_ECHOLNPGM("Probing point -x, +y");
+      break;
+    case 5 :
+      process_subcommands_now(cmd5);
+      SERIAL_ECHOLNPGM("Probing bed center");
+      break;
+    default : 
+      break;
+  }
+  
 }
-
-// void GcodeSuite::M42() {
-//   const int pin_index = PARSED_PIN_INDEX('P', GET_PIN_MAP_INDEX(LED_PIN));
-//   if (pin_index < 0) return;
-
-//   const pin_t pin = GET_PIN_MAP_PIN(pin_index);
-
-//   if (!parser.boolval('I') && pin_is_protected(pin)) return protected_pin_err();
-
-//   bool avoidWrite = false;
-//   if (parser.seenval('T')) {
-//     switch (parser.value_byte()) {
-//       case 0: pinMode(pin, INPUT); avoidWrite = true; break;
-//       case 1: pinMode(pin, OUTPUT); break;
-//       case 2: pinMode(pin, INPUT_PULLUP); avoidWrite = true; break;
-//       #ifdef INPUT_PULLDOWN
-//         case 3: pinMode(pin, INPUT_PULLDOWN); avoidWrite = true; break;
-//       #endif
-//       #ifdef INPUT_ANALOG
-//         case 4: pinMode(pin, INPUT_ANALOG); avoidWrite = true; break;
-//       #endif
-//       #ifdef OUTPUT_OPEN_DRAIN
-//         case 5: pinMode(pin, OUTPUT_OPEN_DRAIN); break;
-//       #endif
-//       default: SERIAL_ECHOLNPGM("Invalid Pin Mode"); return;
-//     }
-//   }
-
-//   if (!parser.seenval('S')) return;
-//   const byte pin_status = parser.value_byte();
-
-//   #if HAS_FAN
-//     switch (pin) {
-//       #if HAS_FAN0
-//         case FAN0_PIN: thermalManager.fan_speed[0] = pin_status; return;
-//       #endif
-//       #if HAS_FAN1
-//         case FAN1_PIN: thermalManager.fan_speed[1] = pin_status; return;
-//       #endif
-//       #if HAS_FAN2
-//         case FAN2_PIN: thermalManager.fan_speed[2] = pin_status; return;
-//       #endif
-//       #if HAS_FAN3
-//         case FAN3_PIN: thermalManager.fan_speed[3] = pin_status; return;
-//       #endif
-//       #if HAS_FAN4
-//         case FAN4_PIN: thermalManager.fan_speed[4] = pin_status; return;
-//       #endif
-//       #if HAS_FAN5
-//         case FAN5_PIN: thermalManager.fan_speed[5] = pin_status; return;
-//       #endif
-//       #if HAS_FAN6
-//         case FAN6_PIN: thermalManager.fan_speed[6] = pin_status; return;
-//       #endif
-//       #if HAS_FAN7
-//         case FAN7_PIN: thermalManager.fan_speed[7] = pin_status; return;
-//       #endif
-//     }
-//   #endif
-
-//   if (avoidWrite) {
-//     SERIAL_ECHOLNPGM("?Cannot write to INPUT");
-//     return;
-//   }
-
-//   // An OUTPUT_OPEN_DRAIN should not be changed to normal OUTPUT (STM32)
-//   // Use M42 Px M1/5 S0/1 to set the output type and then set value
-//   #ifndef OUTPUT_OPEN_DRAIN
-//     pinMode(pin, OUTPUT);
-//   #endif
-//   extDigitalWrite(pin, pin_status);
-
-//   #ifdef ARDUINO_ARCH_STM32
-//     // A simple I/O will be set to 0 by hal.set_pwm_duty()
-//     if (pin_status <= 1 && !PWM_PIN(pin)) return;
-//   #endif
-//   hal.set_pwm_duty(pin, pin_status);
-// }

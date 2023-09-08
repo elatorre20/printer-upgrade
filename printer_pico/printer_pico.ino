@@ -33,8 +33,8 @@ char I2CRecv[32];
 //general variables
 float amb[2]; //for temperature and humidity
 uint16_t rgb[3]; //for rgb duty cycles
-uint8_t lights_on; //whether RGB lights should be on
-uint8_t printing; //for controlling front panel LEDS
+uint8_t lights_on[1]; //whether RGB lights should be on
+uint8_t printing[1]; //for controlling front panel LEDS
 uint8_t fan_state[1]; //for debouncing fan readings
 
 
@@ -96,7 +96,7 @@ void setup() {
         Serial.println("100ms");
       }
       //update RGB color
-      set_rgb(rgb, lights_on, DEBUG_100);
+      set_rgb(rgb, lights_on[0], DEBUG_100);
       //handle I2C messages
       if(I2CRecv[0] != 0){
         Serial.println(I2CRecv);
@@ -125,7 +125,7 @@ void setup() {
       //read temp and humidity
       poll_temp(amb, temp_sensor, DEBUG_1000);
       //set case LED
-      set_led(printing, DEBUG_1000);
+      set_led(printing[0], DEBUG_1000);
       //set case fan
       set_fan(fan_state, DEBUG_1000);
     }
