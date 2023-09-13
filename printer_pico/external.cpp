@@ -137,3 +137,7 @@ void set_led(uint8_t printing, uint8_t deb_print){
     }
   }
 }
+
+void format_temp(int temp, char* buf){
+
+}

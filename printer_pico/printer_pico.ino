@@ -28,6 +28,8 @@ uint8_t sched_flags[4]; //flags for the scheduling periods
 
 //I2C communcation variables
 char I2CString[23] = "\nAmbient temperature: ";
+char I2CString1[21] = "\n Ambient humidity: ";
+char I2CTempHum[2];
 char I2CRecv[32];
 
 //general variables
@@ -161,8 +163,11 @@ void I2C_RXHandler(int numRecv){
   }
 }
 
-void I2C_TXHandler(void){
+void I2C_TXHandler(void){ //writing a total of 48 bytes
   Wire.write(I2CString, 23);
-  int temp = (int)amb[0];
-  Wire.write((char)temp);
+  format_temp((int)amb[0], I2CTempHum);
+  Wire.write(I2CTempHum, 2);
+  Wire.write(I2CString, 21);
+  format_temp((int)amb[1], I2CTempHum);
+  Wire.write(I2CTempHum, 2);
 }
