@@ -18,28 +18,16 @@ char *cmd2 = (char*)"G91\nG0 Z10\nG90\nG0 X260 Y60";
 char *cmd3 = (char*)"G91\nG0 Z10\nG90\nG0 X260 Y260";
 char *cmd4 = (char*)"G91\nG0 Z10\nG90\nG0 X60 Y260";
 char *cmd5 = (char*)"G91\nG0 Z10\nG90\nG0 X160 Y160";
-<<<<<<< Updated upstream
-char cmd_height[16] = "G0 Z";
-
-void GcodeSuite::M5001() {
-
-  if(parser.seenval('D')){ //set probing height as passed in
-    strcat(cmd_height, parser.stringval('D'));
-  }
-  else{ //if not supplied, default value 7.1
-    strcat(cmd_height, "7.1");
-=======
-char cmd_height[16] = "G0 Z7.1";
+char cmd_height[16] = "G90\nG0 Z7.1";
 
 void GcodeSuite::M5001() {
 
   if(parser.seenval('Z')){ //set probing height as passed in
-    float height = parser.intval('Z');
+    float height = parser.floatval('Z');
     SERIAL_ECHO("Probing height = ");
-    SERIAL_ECHO_F(height, 4);
+    SERIAL_ECHO_F(height, 2);
     memset(cmd_height, 0, 16);
-    snprintf(cmd_height, 15, "G0 Z%f", height);
->>>>>>> Stashed changes
+    snprintf(cmd_height, 15, "G90\nG0 Z%f", height);
   }
 
   switch(parser.intval('P')){
