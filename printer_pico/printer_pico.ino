@@ -113,7 +113,7 @@ void setup() {
       //button debounce
       if(on_button){
         on_button = 0;
-        lights_on = lights_on ^ 1;
+        lights_on[0] = lights_on[0] ^ 1;
         if(DEBUG_500){
           Serial.println("button pressed");
         }
@@ -129,7 +129,13 @@ void setup() {
       //set case LED
       set_led(printing[0], DEBUG_1000);
       //set case fan
-      set_fan(fan_state, DEBUG_1000);
+      if(lights_on[0]){
+        digitalWrite(FAN_PIN, HIGH);
+      }
+      else{
+        digitalWrite(FAN_PIN, LOW);
+      }
+      //set_fan(fan_state, DEBUG_1000);
     }
   }
 }
