@@ -650,7 +650,7 @@ void MarlinSettings::postprocess() {
   #include "printcounter.h"
   static_assert(
     !WITHIN(STATS_EEPROM_ADDRESS, EEPROM_OFFSET, EEPROM_OFFSET + sizeof(SettingsData)) &&
-    !WITHIN(STATS_EEPROM_ADDRESS + sizeof(printStatistics), EEPROM_OFFSET, EEPROM_OFFSET + sizeof(SettingsData)),
+    !WITHIN(STATS_EEPROM_ADDRESS + sizeof(printStatistics) + sizeof(uint8_t), EEPROM_OFFSET, EEPROM_OFFSET + sizeof(SettingsData)),
     "STATS_EEPROM_ADDRESS collides with EEPROM settings storage."
   );
 #endif
@@ -662,6 +662,12 @@ void MarlinSettings::postprocess() {
       !WITHIN(SD_FIRMWARE_UPDATE_EEPROM_ADDR, EEPROM_OFFSET, EEPROM_OFFSET + sizeof(SettingsData)),
       "SD_FIRMWARE_UPDATE_EEPROM_ADDR collides with EEPROM settings storage."
     );
+    #if ENABLED(PRINTCOUNTER)
+      static_assert(
+        SD_FIRMWARE_UPDATE_EEPROM_ADDR != STATS_EEPROM_ADDRESS,
+        "SD_FIRMWARE_UPDATE_EEPROM_ADDR collides with print statistics storage."
+      );
+    #endif
   #endif
 
   bool MarlinSettings::sd_update_status() {

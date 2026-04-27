@@ -1678,7 +1678,7 @@ void MarlinUI::init() {
     #ifdef ACTION_ON_RESUME
       hostui.resume();
     #endif
-    print_job_timer.start(); // Also called by M24
+    print_job_timer.start();
   }
 
   #if HAS_PRINT_PROGRESS

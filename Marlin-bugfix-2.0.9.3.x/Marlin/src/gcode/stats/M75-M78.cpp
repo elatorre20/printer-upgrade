@@ -84,4 +84,11 @@ void GcodeSuite::M77() {
     print_job_timer.showStats();
   }
 
+  /**
+   * M79: Placeholder
+   */
+  void GcodeSuite::M79() {
+    SERIAL_ECHOLNPGM("M79 placeholder: not implemented.");
+  }
+
 #endif // PRINTCOUNTER

@@ -119,6 +119,7 @@
  * M76  - Pause the print job timer.
  * M77  - Stop the print job timer.
  * M78  - Show statistical information about the print jobs. (Requires PRINTCOUNTER)
+ * M79  - Placeholder command. (Requires PRINTCOUNTER)
  *
  * M80  - Turn on Power Supply. (Requires PSU_CONTROL)
  * M81  - Turn off Power Supply. (Requires PSU_CONTROL)
@@ -686,6 +687,7 @@ private:
 
   #if ENABLED(PRINTCOUNTER)
     static void M78();
+    static void M79();
   #endif
 
   #if ENABLED(PSU_CONTROL)
