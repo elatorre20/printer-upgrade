@@ -39,6 +39,7 @@ struct printStatistics {    // 16 bytes
   uint32_t longestPrint;    // Longest successful print job
   #if HAS_EXTRUDERS
     float  filamentUsed;    // Accumulated filament consumed in mm
+    float  filamentUsedSinceNozzleChange; // Filament consumed in mm since nozzle change
   #endif
   #if SERVICE_INTERVAL_1 > 0
     uint32_t nextService1;  // Service intervals (or placeholders)

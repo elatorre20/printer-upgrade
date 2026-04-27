@@ -211,8 +211,9 @@ void GcodeSuite::get_destination_from_command() {
     feedrate_mm_s = parser.value_feedrate();
 
   #if BOTH(PRINTCOUNTER, HAS_EXTRUDERS)
-    if (!DEBUGGING(DRYRUN) && !skip_move)
+    if (!DEBUGGING(DRYRUN) && !skip_move) {
       print_job_timer.incFilamentUsed(destination.e - current_position.e);
+    }
   #endif
 
   // Get ABCDHI mixing factors
@@ -551,6 +552,7 @@ void GcodeSuite::process_parsed_command(const bool no_ok/*=false*/) {
 
       #if ENABLED(PRINTCOUNTER)
         case 78: M78(); break;                                    // M78: Show print statistics
+        case 79: M79(); break;                                    // M79: Placeholder
       #endif
 
       #if ENABLED(M100_FREE_MEMORY_WATCHER)

@@ -45,6 +45,8 @@ Stopwatch print_job_timer;      // Global Print Job Timer instance
   #include "../module/planner.h"
 #endif
 
+#define PRINTCOUNTER_STATS_VERSION 0x17
+
 // Service intervals
 #if HAS_SERVICE_INTERVALS
   #if SERVICE_INTERVAL_1 > 0
@@ -88,6 +90,7 @@ millis_t PrintCounter::deltaDuration() {
     if (!isLoaded()) return;
 
     data.filamentUsed += amount; // mm
+    data.filamentUsedSinceNozzleChange += amount; // mm
   }
 #endif
 
@@ -101,7 +104,7 @@ void PrintCounter::initStats() {
     , .finishedPrints = 0
     , .printTime = 0
     , .longestPrint = 0
-    OPTARG(HAS_EXTRUDERS, .filamentUsed = 0.0)
+    OPTARG(HAS_EXTRUDERS, .filamentUsed = 0.0, .filamentUsedSinceNozzleChange = 0.0)
     #if SERVICE_INTERVAL_1 > 0
       , .nextService1 = SERVICE_INTERVAL_SEC_1
     #endif
@@ -115,7 +118,7 @@ void PrintCounter::initStats() {
 
   saveStats();
   persistentStore.access_start();
-  persistentStore.write_data(address, (uint8_t)0x16);
+  persistentStore.write_data(address, (uint8_t)PRINTCOUNTER_STATS_VERSION);
   persistentStore.access_finish();
 }
 
@@ -138,7 +141,7 @@ void PrintCounter::loadStats() {
   uint8_t value = 0;
   persistentStore.access_start();
   persistentStore.read_data(address, &value, sizeof(uint8_t));
-  if (value != 0x16)
+  if (value != PRINTCOUNTER_STATS_VERSION)
     initStats();
   else
     persistentStore.read_data(address + sizeof(uint8_t), (uint8_t*)&data, sizeof(printStatistics));
@@ -218,6 +221,8 @@ void PrintCounter::showStats() {
 
   #if HAS_EXTRUDERS
     SERIAL_ECHOPGM("\n" STR_STATS "Filament used: ", data.filamentUsed / 1000);
+    SERIAL_CHAR('m');
+    SERIAL_ECHOPGM("\n" STR_STATS "Filament since nozzle change: ", data.filamentUsedSinceNozzleChange / 1000);
     SERIAL_CHAR('m');
   #endif
 
